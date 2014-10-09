@@ -1,0 +1,30 @@
+title = "Default SA config"
+
+[algorithm]
+	method = "sa"
+
+[sa]
+	outer-loop = 100
+	inner-loop = 1000
+	temp-start = 0.5
+	temp-final = 0.001
+	save-steps = 100
+
+[rules]
+	# Input rule is optional
+	#input = "./optional"
+	output = "./output-best-rule"
+
+[proteindb]
+	db-ip = "10.0.2.116"
+	db-name = "proteindb_dev"
+	collection-name = "protein"
+	target = "ss3_cons_all"
+
+[ca]
+	initial-states = ["#","A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
+	transition-states = ["-","*","|","?"]
+	has-joker = true
+	r = 3
+	steps = 100
+	consensus = 11
