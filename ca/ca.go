@@ -1,8 +1,8 @@
 package ca
 
 import (
-	// "bitbucket.org/zgcarvalho/zeca/proteindb"
-	"bitbucket.org/zgcarvalho/zeca/rules"
+	// "github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 	"bytes"
 	"fmt"
 	// "io/ioutil"

@@ -1,8 +1,8 @@
 package sa
 
 // import (
-// 	"bitbucket.org/zgcarvalho/zeca/ca"
-// 	"bitbucket.org/zgcarvalho/zeca/rules"
+// 	"github.com/jgcarvalho/zeca/ca"
+// 	"github.com/jgcarvalho/zeca/rules"
 // 	"fmt"
 // 	"math"
 // 	"math/rand"

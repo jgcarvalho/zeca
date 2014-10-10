@@ -1,10 +1,10 @@
 package sa
 
 import (
-	"bitbucket.org/zgcarvalho/zeca/ca"
-	"bitbucket.org/zgcarvalho/zeca/metrics"
-	"bitbucket.org/zgcarvalho/zeca/proteindb"
-	"bitbucket.org/zgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 	"fmt"
 	"io/ioutil"
 	"math"

@@ -10,10 +10,10 @@ func fitness(predicted, real []byte) (c3, cL, cH, cS, q3, qL, qH, qS float64) {
     INPUT:
     vetores contendo a estrutura secundaria predita e real
     OUTPUT:
-    c3 = media da correlacao cL, cH e cS 
+    c3 = media da correlacao cL, cH e cS
     cL = correlacao da predicao de regioes de loops
     cH = correlacao da predicao de regioes de helice
-    cS = correlacao da predicao de regioes de fitas 
+    cS = correlacao da predicao de regioes de fitas
     ATENCAO:
     Aparentemente proteinas menores sao favorecidas neste calculo!!! */
 
@@ -106,7 +106,7 @@ func fitness(predicted, real []byte) (c3, cL, cH, cS, q3, qL, qH, qS float64) {
                 cs_fp += 1
             } else {
                 ch_fn += 1
-            }    
+            }
 
         //se no vetor da estrutura secundaria real houver uma fita na posicao i
         } else if real[i] == 3 {
@@ -159,9 +159,9 @@ func fitness(predicted, real []byte) (c3, cL, cH, cS, q3, qL, qH, qS float64) {
         cS = float64(cs_tp*cs_tn - cs_fp*cs_fn)/dencS
     }
 
-    //calculo da c3 (media das correlacoes), apenas sao considerados para a media a correlacao de 
+    //calculo da c3 (media das correlacoes), apenas sao considerados para a media a correlacao de
     //estruturas secundarias presentes na estrutura secundaria real da proteina
-    if calculatecL && calculatecH && calculatecS { 
+    if calculatecL && calculatecH && calculatecS {
         c3 = (cL + cH + cS)/3.0
     } else if calculatecL && calculatecH && !calculatecS {
         c3 = (cL + cH)/2.0
@@ -175,7 +175,7 @@ func fitness(predicted, real []byte) (c3, cL, cH, cS, q3, qL, qH, qS float64) {
         c3 = cH
     } else if !calculatecL && !calculatecH && calculatecS {
         c3 = cS
-    } 
+    }
 
     //Q3, ql, qh e qs
     q3 = float64((npL + npH + npS))/float64((nrL + nrH + nrS))
@@ -193,10 +193,10 @@ func fitnessSimple(predicted, real []byte) (c3, q3 float64) {
     INPUT:
     vetores contendo a estrutura secundaria predita e real
     OUTPUT:
-    c3 = media da correlacao cL, cH e cS 
+    c3 = media da correlacao cL, cH e cS
     cL = correlacao da predicao de regioes de loops
     cH = correlacao da predicao de regioes de helice
-    cS = correlacao da predicao de regioes de fitas 
+    cS = correlacao da predicao de regioes de fitas
     ATENCAO:
     Aparentemente proteinas menores sao favorecidas neste calculo!!! */
 
@@ -293,7 +293,7 @@ func fitnessSimple(predicted, real []byte) (c3, q3 float64) {
                 cs_fp += 1
             } else {
                 ch_fn += 1
-            }    
+            }
 
         //se no vetor da estrutura secundaria real houver uma fita na posicao i
         } else if real[i] == 3 {
@@ -346,9 +346,9 @@ func fitnessSimple(predicted, real []byte) (c3, q3 float64) {
         cS = float64(cs_tp*cs_tn - cs_fp*cs_fn)/dencS
     }
 
-    //calculo da c3 (media das correlacoes), apenas sao considerados para a media a correlacao de 
+    //calculo da c3 (media das correlacoes), apenas sao considerados para a media a correlacao de
     //estruturas secundarias presentes na estrutura secundaria real da proteina
-    if calculatecL && calculatecH && calculatecS { 
+    if calculatecL && calculatecH && calculatecS {
         c3 = (cL + cH + cS)/3.0
     } else if calculatecL && calculatecH && !calculatecS {
         c3 = (cL + cH)/2.0
@@ -362,7 +362,7 @@ func fitnessSimple(predicted, real []byte) (c3, q3 float64) {
         c3 = cH
     } else if !calculatecL && !calculatecH && calculatecS {
         c3 = cS
-    } 
+    }
 
     //Q3, ql, qh e qs
    // fmt.Println("(npL + npH + npS))/float64((nrL + nrH + nrS)", npL, npH, npS,float64(nrL + nrH + nrS))

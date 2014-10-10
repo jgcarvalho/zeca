@@ -1,17 +1,18 @@
 package main
 
 import (
-	// "bitbucket.org/zgcarvalho/zeca/ca"
-	"bitbucket.org/zgcarvalho/zeca/cga"
-	"bitbucket.org/zgcarvalho/zeca/eda"
-	"bitbucket.org/zgcarvalho/zeca/sa"
-	// "bitbucket.org/zgcarvalho/zeca/rules"
+	// "github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/cga"
+	"github.com/jgcarvalho/zeca/eda"
+	"github.com/jgcarvalho/zeca/sa"
+	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
 	"fmt"
-	"github.com/BurntSushi/toml"
 	"log"
 	"os"
 	"runtime"
+
+	"github.com/BurntSushi/toml"
 )
 
 func RunCGA(fnconfig string) {
@@ -71,19 +72,19 @@ func main() {
 	switch *method {
 	case 1:
 		if *fnconfig == "default" {
-			RunCGA(os.Getenv("GOPATH") + "/src/bitbucket.org/zgcarvalho/zeca/cgaconfig.toml")
+			RunCGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/cgaconfig.toml")
 		} else {
 			RunCGA(*fnconfig)
 		}
 	case 2:
 		if *fnconfig == "default" {
-			RunEDA(os.Getenv("GOPATH") + "/src/bitbucket.org/zgcarvalho/zeca/edaconfig.toml")
+			RunEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/edaconfig.toml")
 		} else {
 			RunEDA(*fnconfig)
 		}
 	case 3:
 		if *fnconfig == "default" {
-			runSA(os.Getenv("GOPATH") + "/src/bitbucket.org/zgcarvalho/zeca/saconfig.toml")
+			runSA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/saconfig.toml")
 		} else {
 			runSA(*fnconfig)
 		}

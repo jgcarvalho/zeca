@@ -1,14 +1,14 @@
 package cass
-	
+
 import (
 	"io/ioutil"
 	"strings"
-	"bitbucket.org/zgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/proteindb"
 )
 
 //estrutura para armazenar informacao de um automato celular
 type CellAuto struct {
-	id string 
+	id string
 	seq []byte
 	cell []byte
 	trueSS []byte
@@ -25,7 +25,7 @@ func CreateOne(fn string) *CellAuto {
 	c := new(CellAuto)
 	c.id = fn
 	c.seq, c.cell, c.trueSS = loadFile(fn)
-	
+
 	/*DEBUG
 	fmt.Println(c.cell)
 	fmt.Println(c.trueSS)
@@ -34,7 +34,7 @@ func CreateOne(fn string) *CellAuto {
 }
 
 func CreateN(fns []string) []CellAuto {
-	/* Funcao que cria N automatos celulares de acordo com um vetor contendo o nome dos arquivos 
+	/* Funcao que cria N automatos celulares de acordo com um vetor contendo o nome dos arquivos
 	INPUT:
 	Slice com nome dos arquivos das proteinas
 	OUTPUT:

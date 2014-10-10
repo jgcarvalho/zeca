@@ -1,7 +1,7 @@
 package proteindb
 
 import (
-	// "bitbucket.org/zgcarvalho/zeca/ca"
+	// "github.com/jgcarvalho/zeca/ca"
 	"gopkg.in/mgo.v2"
 	//"labix.org/v2/mgo/bson"
 	"fmt"

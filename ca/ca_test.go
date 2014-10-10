@@ -1,7 +1,7 @@
 package ca
 
 import (
-	"bitbucket.org/zgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/rules"
 	"fmt"
 	"testing"
 )

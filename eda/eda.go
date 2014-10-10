@@ -1,10 +1,9 @@
 package eda
 
 import (
-	"bitbucket.org/zgcarvalho/zeca/ca"
-	"bitbucket.org/zgcarvalho/zeca/metrics"
-	"bitbucket.org/zgcarvalho/zeca/proteindb"
-	"bitbucket.org/zgcarvalho/zeca/rules"
+	"code.google.com/p/plotinum/plot"
+	"code.google.com/p/plotinum/plotter"
+
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +11,11 @@ import (
 	"sort"
 	"sync"
 	"time"
+
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Probs struct {
@@ -57,7 +61,7 @@ func Run(conf Config) error {
 			ca, _ := ca.Create1D(prot_id, prot_seq, prot_ss, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
 			pop.fitness[i] = Fitness(ca)
 		}(&pop, i) //preciso definir o que por aqui
-		if i % 100 == 0 && i > 0{
+		if i%100 == 0 && i > 0 {
 			fmt.Println("Waiting", i)
 			wg1.Wait()
 		}
@@ -65,7 +69,7 @@ func Run(conf Config) error {
 	wg1.Wait()
 
 	fmt.Println("População inicial = ", conf.EDA.Population, "OK")
-
+	histogram(pop.fitness)
 	var wg2 sync.WaitGroup
 	for i := 0; i < conf.EDA.Generations; i++ {
 		fmt.Println("Generation", i+1)
@@ -82,7 +86,6 @@ func Run(conf Config) error {
 			ioutil.WriteFile(fmt.Sprintf("%s_%d", conf.EDA.OutputProbs, i+1), []byte(probs.String()), 0644)
 		}
 
-
 		for j := 0; j < len(pop.rule); j++ {
 			wg2.Add(1)
 			go func(pop *Population, j int) {
@@ -92,7 +95,7 @@ func Run(conf Config) error {
 				pop.fitness[j] = Fitness(ca)
 
 			}(&pop, j)
-			if j % 10 == 0 && j > 0{
+			if j%10 == 0 && j > 0 {
 				fmt.Println("Waiting", j)
 				wg2.Wait()
 			}
@@ -299,4 +302,28 @@ func (p *Probs) Converged() bool {
 		}
 	}
 	return true
+}
+
+func histogram(fitness []float64) {
+	v := make(plotter.Values, len(fitness))
+	for i := range v {
+		v[i] = fitness[i]
+	}
+
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+	p.Title.Text = "Histogram"
+
+	h, err := plotter.NewHist(v, 10)
+	if err != nil {
+		panic(err)
+	}
+	h.Normalize(1)
+	p.X.Min, p.X.Max = 0.0, 1.0
+	p.Add(h)
+	if err := p.Save(8, 4, "hist.png"); err != nil {
+		panic(err)
+	}
 }
