@@ -13,12 +13,11 @@ func Histogram(popFitness []float64, selFitness []float64, gen int) {
 	selValues := make(plotter.Values, len(selFitness))
 	for i := range popValues {
 		popValues[i] = popFitness[i]
-		fmt.Println("plot", i, popValues[i], popFitness[i])
+
 	}
 	for j := range selValues {
 		selValues[j] = selFitness[j]
 	}
-	fmt.Println("PLOT", len(popFitness), len(popValues))
 
 	p, err := plot.New()
 	if err != nil {
@@ -32,18 +31,19 @@ func Histogram(popFitness []float64, selFitness []float64, gen int) {
 	if err != nil {
 		panic(err)
 	}
-	hPop.Normalize(1)
+	//	hPop.Normalize(100)
 	gray := color.RGBA{0, 0, 0, 64}
 	hPop.FillColor = gray
 	hSel, err := plotter.NewHist(selValues, 10)
 	if err != nil {
 		panic(err)
 	}
-	hSel.Normalize(1)
+	//hSel.Normalize(100)
 	blue := color.RGBA{0, 61, 245, 64}
 	hSel.FillColor = blue
 
 	p.X.Min, p.X.Max = 0.0, 1.0
+	p.Y.Min, p.Y.Max = 0, float64(len(popValues))
 	p.Add(hPop)
 	p.Add(hSel)
 	if err := p.Save(8, 4, fmt.Sprintf("hist_gen_%v.svg", gen)); err != nil {
