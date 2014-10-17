@@ -1,9 +1,6 @@
 package eda
 
 import (
-	"code.google.com/p/plotinum/plot"
-	"code.google.com/p/plotinum/plotter"
-
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +11,7 @@ import (
 
 	"github.com/jgcarvalho/zeca/ca"
 	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/plot"
 	"github.com/jgcarvalho/zeca/proteindb"
 	"github.com/jgcarvalho/zeca/rules"
 )
@@ -69,7 +67,11 @@ func Run(conf Config) error {
 	wg1.Wait()
 
 	fmt.Println("População inicial = ", conf.EDA.Population, "OK")
-	histogram(pop.fitness)
+	// tmp := make([]float64, len(pop.fitness))
+	// for j := range tmp {
+	// 	tmp[j] = pop.fitness[j] * 1.1
+	// }
+
 	var wg2 sync.WaitGroup
 	for i := 0; i < conf.EDA.Generations; i++ {
 		fmt.Println("Generation", i+1)
@@ -103,6 +105,8 @@ func Run(conf Config) error {
 		fmt.Printf("Wait - Setting new rule")
 		wg2.Wait()
 		fmt.Println("OK")
+		//Este é o melhor lugar para criar o grafico? pop
+		plot.Histogram(pop.fitness, nil, i)
 	}
 
 	err := ioutil.WriteFile(conf.EDA.OutputProbs, []byte(probs.String()), 0644)
@@ -302,28 +306,4 @@ func (p *Probs) Converged() bool {
 		}
 	}
 	return true
-}
-
-func histogram(fitness []float64) {
-	v := make(plotter.Values, len(fitness))
-	for i := range v {
-		v[i] = fitness[i]
-	}
-
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
-	p.Title.Text = "Histogram"
-
-	h, err := plotter.NewHist(v, 10)
-	if err != nil {
-		panic(err)
-	}
-	h.Normalize(1)
-	p.X.Min, p.X.Max = 0.0, 1.0
-	p.Add(h)
-	if err := p.Save(8, 4, "hist.png"); err != nil {
-		panic(err)
-	}
 }
