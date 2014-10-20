@@ -4,6 +4,7 @@ import (
 	// "github.com/jgcarvalho/zeca/ca"
 	"github.com/jgcarvalho/zeca/cga"
 	"github.com/jgcarvalho/zeca/eda"
+	"github.com/jgcarvalho/zeca/ga"
 	"github.com/jgcarvalho/zeca/sa"
 	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
@@ -27,6 +28,20 @@ func RunCGA(fnconfig string) {
 	}
 	fmt.Println("Configuration:", conf)
 	cga.Run(conf)
+}
+
+func runGA(fnconfig string) {
+	var conf ga.Config
+	md, err := toml.DecodeFile(fnconfig, &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(md.Undecoded()) > 0 {
+		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		return
+	}
+	fmt.Println("Configuration:", conf)
+	ga.Run(conf)
 }
 
 func RunEDA(fnconfig string) {
@@ -87,6 +102,12 @@ func main() {
 			runSA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/saconfig.toml")
 		} else {
 			runSA(*fnconfig)
+		}
+	case 4:
+		if *fnconfig == "default" {
+			runGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/gaconfig.toml")
+		} else {
+			runGA(*fnconfig)
 		}
 	default:
 		flag.PrintDefaults()

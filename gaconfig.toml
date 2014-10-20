@@ -1,0 +1,33 @@
+title = "Default CGA config"
+
+[algorithm]
+	method = "cga"
+
+[ga]
+	generations = 100000
+	population = 500
+	selection = 50
+	tournament = 8
+	crossover = 1
+	mutation = 0.05
+	output-probabilities = "./output-probabilities-duel"
+	save-steps = 100
+
+[rules]
+	# Input rule is optional
+	#input = "./optional"
+	output = "./output-rules"
+
+[proteindb]
+	db-ip = "localhost"
+	db-name = "proteindb_dev"
+	collection-name = "protein"
+	target = "ss3_cons_all"
+
+[ca]
+	initial-states = ["#","A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
+	transition-states = ["-","*","|","?"]
+	has-joker = true
+	r = 3
+	steps = 100
+	consensus = 11

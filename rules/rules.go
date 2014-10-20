@@ -74,19 +74,19 @@ func Create(sStates []string, tStates []string, hasjoker bool, r int) (*Rule, er
 	st := RuleStates(ru.Prm)
 	ru.Code = make([][][]byte, len(st))
 	ru.Fixed = make([][][]bool, len(st))
-	for ln := range st {
-		ru.Code[ln] = make([][]byte, len(st))
-		ru.Fixed[ln] = make([][]bool, len(st))
-		for c := range st {
-			ru.Code[ln][c] = make([]byte, len(st))
-			ru.Fixed[ln][c] = make([]bool, len(st))
+	for c := range st {
+		ru.Code[c] = make([][]byte, len(st))
+		ru.Fixed[c] = make([][]bool, len(st))
+		for ln := range st {
+			ru.Code[c][ln] = make([]byte, len(st))
+			ru.Fixed[c][ln] = make([]bool, len(st))
 			for rn := range st {
-				ru.Code[ln][c][rn] = ru.Prm.TransitionStates[rand.Intn(len(ru.Prm.TransitionStates))]
+				ru.Code[c][ln][rn] = ru.Prm.TransitionStates[rand.Intn(len(ru.Prm.TransitionStates))]
 				//
 				if c == 0 {
-					ru.Fixed[ln][c][rn] = true
+					ru.Fixed[c][ln][rn] = true
 				} else {
-					ru.Fixed[ln][c][rn] = false
+					ru.Fixed[c][ln][rn] = false
 				}
 			}
 		}
@@ -104,7 +104,7 @@ func (r *Rule) String() string {
 	for c := 0; c < len(r.Code); c++ {
 		for ln := 0; ln < len(r.Code); ln++ {
 			for rn := 0; rn < len(r.Code); rn++ {
-				toprint += fmt.Sprintf("[%s][%s][%s] -> [%s]\n", codes[ln], codes[c], codes[rn], codes[r.Code[ln][c][rn]])
+				toprint += fmt.Sprintf("[%s][%s][%s] -> [%s]\n", codes[ln], codes[c], codes[rn], codes[r.Code[c][ln][rn]])
 			}
 		}
 	}
