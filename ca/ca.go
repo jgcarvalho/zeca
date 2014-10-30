@@ -82,7 +82,7 @@ func (ca *CellAuto1D) Run() {
 func oneStep(seq []byte, currentState []byte, nextState []byte, rule *rules.Rule) {
 	var state byte
 	for c := 1; c < len(currentState)-1; c++ {
-		state = rule.Code[currentState[c]][currentState[c-1]][currentState[c+1]]
+		state = rule.Code[currentState[c-1]][currentState[c]][currentState[c+1]]
 		if rule.Prm.Hasjoker && state == rule.Prm.TransitionStates[len(rule.Prm.TransitionStates)-1] {
 			nextState[c] = seq[c]
 		} else {

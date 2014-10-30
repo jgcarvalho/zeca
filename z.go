@@ -3,6 +3,7 @@ package main
 import (
 	// "github.com/jgcarvalho/zeca/ca"
 	"github.com/jgcarvalho/zeca/cga"
+	"github.com/jgcarvalho/zeca/design"
 	"github.com/jgcarvalho/zeca/eda"
 	"github.com/jgcarvalho/zeca/ga"
 	"github.com/jgcarvalho/zeca/sa"
@@ -16,7 +17,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-func RunCGA(fnconfig string) {
+func runCGA(fnconfig string) {
 	var conf cga.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
 	if err != nil {
@@ -44,7 +45,7 @@ func runGA(fnconfig string) {
 	ga.Run(conf)
 }
 
-func RunEDA(fnconfig string) {
+func runEDA(fnconfig string) {
 	var conf eda.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
 	if err != nil {
@@ -72,6 +73,20 @@ func runSA(fnconfig string) {
 	sa.Run(conf)
 }
 
+func runDesign(fnconfig string) {
+	var conf design.Config
+	md, err := toml.DecodeFile(fnconfig, &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(md.Undecoded()) > 0 {
+		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		return
+	}
+	fmt.Println("Configuration:", conf)
+	design.Run(conf)
+}
+
 func printUsage() {
 	fmt.Println("Manual")
 }
@@ -87,15 +102,15 @@ func main() {
 	switch *method {
 	case 1:
 		if *fnconfig == "default" {
-			RunCGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/cgaconfig.toml")
+			runCGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/cgaconfig.toml")
 		} else {
-			RunCGA(*fnconfig)
+			runCGA(*fnconfig)
 		}
 	case 2:
 		if *fnconfig == "default" {
-			RunEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/edaconfig.toml")
+			runEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/edaconfig.toml")
 		} else {
-			RunEDA(*fnconfig)
+			runEDA(*fnconfig)
 		}
 	case 3:
 		if *fnconfig == "default" {
@@ -108,6 +123,12 @@ func main() {
 			runGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/gaconfig.toml")
 		} else {
 			runGA(*fnconfig)
+		}
+	case 9:
+		if *fnconfig == "default" {
+			runDesign(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/designconfig.toml")
+		} else {
+			runDesign(*fnconfig)
 		}
 	default:
 		flag.PrintDefaults()
