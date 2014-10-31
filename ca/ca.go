@@ -161,7 +161,7 @@ func decode(cell []byte, prm *rules.Params) string {
 	return seq
 }
 
-/* old function kept just to precaution
+/* old decode function kept just to precaution
 func decode(cell []byte) string {
 	s := make([]byte, len(cell))
 	for i, v := range cell {

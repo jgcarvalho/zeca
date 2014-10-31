@@ -1,9 +1,9 @@
 package ca
 
 import (
-	"github.com/jgcarvalho/zeca/rules"
-	"fmt"
 	"testing"
+
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type testdata struct {
@@ -44,6 +44,10 @@ func TestCreate1D(t *testing.T) {
 	if ca != nil {
 		t.Error("Caso 2. Erro no retorno do autômato celular que retornou um autômato inválido")
 	}
+
+}
+
+func Testenconde(t *testing.T) {
 
 }
 
