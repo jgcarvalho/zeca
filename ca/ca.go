@@ -1,16 +1,13 @@
 package ca
 
 import (
-	// "github.com/jgcarvalho/zeca/proteindb"
 	"bytes"
 	"fmt"
 
 	"github.com/jgcarvalho/zeca/rules"
-	// "io/ioutil"
-	// "strings"
 )
 
-// CellAuto é uma estrutura para armazenar um autômato
+// CellAuto1D é uma estrutura para armazenar um autômato
 type CellAuto1D struct {
 	id           string
 	Begin        []byte
@@ -22,6 +19,9 @@ type CellAuto1D struct {
 	consensus    int
 }
 
+// Create1D creates a 1D cellular automata with id, initial state, expected final
+// state, transition rules, number of steps to evolve, and number of rows (last
+// rows) to create a consensus that will be compared with the expected final state
 func Create1D(id string, Begin string, Expected string, r *rules.Rule, step int, consensus int) (*CellAuto1D, error) {
 	if len(Begin) != len(Expected) {
 		return nil, fmt.Errorf("Estado de entrada e a saida esperada tem comprimentos diferentes")
@@ -36,7 +36,7 @@ func Create1D(id string, Begin string, Expected string, r *rules.Rule, step int,
 	return &CellAuto1D{id, b, exp, End, EndConsensus, r, step, consensus}, nil
 }
 
-// alterar para retornar tp, tn, fp, fn para facilitar o calculo da correlacao
+// Run the 1D cellular automata to determine the final state ("end and endconsensus")
 func (ca *CellAuto1D) Run() {
 	currentState := make([]byte, len(ca.Begin))
 	nextState := make([]byte, len(ca.Begin))
@@ -53,7 +53,6 @@ func (ca *CellAuto1D) Run() {
 			// fmt.Println(i, currentState)
 		}
 	}
-	// modificar para utilizar um comite dos "11" ultimos estados
 	copy(ca.End[0], currentState)
 	for i := 0; i < ca.consensus-1; i++ {
 		oneStep(ca.Begin, ca.End[i], ca.End[i+1], ca.Rule)
@@ -79,6 +78,7 @@ func (ca *CellAuto1D) Run() {
 	}
 }
 
+// oneStep only evolves the CA for one step
 func oneStep(seq []byte, currentState []byte, nextState []byte, rule *rules.Rule) {
 	var state byte
 	for c := 1; c < len(currentState)-1; c++ {
@@ -91,18 +91,20 @@ func oneStep(seq []byte, currentState []byte, nextState []byte, rule *rules.Rule
 	}
 }
 
-func (ca *CellAuto1D) SetRule(r *rules.Rule) {
-	ca.Rule = r
+// SetRule changes the CA rule to a new one
+func (ca *CellAuto1D) SetRule(newRule *rules.Rule) {
+	ca.Rule = newRule
 }
 
-// ConfusionMatrix é um método que retorna a matrix de confusão. A matrix tem formato NxN, onde N é o número
-// de estados de transição do autômato. Quando as regras de transição incluem um "coringa" o formato da matrix
-// será (N-1)x(N)
+// ConfusionMatrix returns a confusion matrix. The matrix has a dimension NxN
+// where N is the number of transitions states. When the transition rules have a
+// "wild card" the dimension of the matrix will be (N-1)x(N)
 func (ca *CellAuto1D) ConfusionMatrix() [][]int {
 	n := len(ca.Rule.Prm.TransitionStates)
+	//np -> number of predicted; nr -> number of real
 	np, nr := n, n
 	if ca.Rule.Prm.Hasjoker {
-		nr -= 1
+		nr--
 	}
 	cm := make([][]int, nr)
 	for i := 0; i < nr; i++ {
@@ -121,7 +123,7 @@ func (ca *CellAuto1D) ConfusionMatrix() [][]int {
 		if predicted == -1 {
 			predicted = len(ca.Rule.Prm.TransitionStates) - 1
 		}
-		cm[expected][predicted] += 1
+		cm[expected][predicted]++
 	}
 
 	// fmt.Println("Confusion Matrix:")
@@ -129,93 +131,8 @@ func (ca *CellAuto1D) ConfusionMatrix() [][]int {
 	return cm
 }
 
-// func Run(c CellAuto, rule *rules.Rules) ([]byte, float64, float64, float64, float64, float64, float64, float64, float64) {
-// 	currentState := make([]byte, len(c.cell))
-// 	nextState := make([]byte, len(c.cell))
-// 	copy(currentState, c.cell)
-// 	copy(nextState, c.cell)
-
-// 	//fmt.Println(currentState)
-// 	for i := 0; i < len(currentState) * 2; i++ {
-// 		if i%2 == 0 {
-// 			oneStep(c.seq, currentState, nextState, rule)
-// 			//fmt.Println(i, nextState)
-// 		} else {
-// 			oneStep(c.seq, nextState, currentState, rule)
-// 			//fmt.Println(i, currentState)
-// 		}
-
-// 		if bytes.Equal(currentState,nextState) {
-// 			//fmt.Println("Estabilizou no passo", i)
-// 			break
-// 		}
-// 	}
-// func encode(start string, End string, rule *rules.Rule) ([]byte, []byte, error) {
-// 	Begin := make([]byte, len(start))
-// 	Expected := make([]byte, len(End))
-// }
-
-// func CreateOne(fn string) *CellAuto {
-// 	/* Funcao que cria um automato celular de acordo com o arquivo passado
-// 	INPUT:
-// 	Nome do arquivo
-// 	OUTPUT:
-// 	Automato celular com id (nome=pdb id), sequencia(celulas) e estrutura real */
-
-// 	c := new(CellAuto)
-// 	c.id = fn
-// 	c.seq, c.cell, c.trueSS = loadFile(fn)
-
-// 	/*DEBUG
-// 	fmt.Println(c.cell)
-// 	fmt.Println(c.trueSS)
-// 	println(lines[0][0:5]) */
-// 	return c
-// }
-
-// func CreateN(fns []string) []CellAuto {
-// 	/* Funcao que cria N automatos celulares de acordo com um vetor contendo o nome dos arquivos
-// 	INPUT:
-// 	Slice com nome dos arquivos das proteinas
-// 	OUTPUT:
-// 	Slice de automatos celulares com id (nome=pdb id), sequencia(celulas) e estrutura real */
-
-// 	//cria uma slice de automatos celulares com dimensao igual ao numero de arquivos de proteinas
-// 	cas := make([]CellAuto, len(fns))
-
-// 	//inicializa os automatos
-// 	for i := 0; i < len(fns); i++ {
-// 		cas[i].id = fns[i]
-// 		cas[i].seq, cas[i].cell, cas[i].trueSS = loadFile(fns[i])
-// 	}
-// 	return cas
-// }
-
-// func CreateFromProteins(p []proteindb.Protein) []CellAuto {
-// 	cas := make([]CellAuto, len(p))
-// 	for i := 0; i < len(p); i++ {
-// 		cas[i].id = p[i].Pdb_id
-// 		cas[i].seq = encode(p[i].Chains[0].Seq_pdb)
-// 		cas[i].cell = encode(p[i].Chains[0].Seq_pdb)
-// 		cas[i].trueSS = encode(p[i].Chains[0].Ss3_cons_all)
-// 	}
-// 	return cas
-// }
-
-// func loadFile(fn string) (seq []byte, cell []byte, trueSS []byte) {
-// 	content, err := ioutil.ReadFile("/home/jgcarvalho/sscago/data/" + fn)
-// 	if err != nil {
-// 		println("erro na leitura do arquivo", fn, err)
-// 	}
-
-// 	//considerando haver duas linhas, a primeira a seq e a segunda a ss
-// 	lines := strings.Split(string(content), "\n")
-// 	seq = encode(lines[0])
-// 	cell = encode(lines[0])
-// 	trueSS = encode(lines[1])
-// 	return
-// }
-
+// encode changes the sequence that represents the initial state to a slice of
+// bytes
 func encode(seq string, prm *rules.Params) []byte {
 	out := make([]byte, len(seq))
 	codes := append(prm.StrStartStates, prm.StrTransitionStates...)
@@ -229,6 +146,22 @@ func encode(seq string, prm *rules.Params) []byte {
 	return out
 }
 
+// decode changes a CA state (set of cells) from byte code to string code
+// with the character that was set in the rule
+func decode(cell []byte, prm *rules.Params) string {
+	var seq string
+	codes := append(prm.StrStartStates, prm.StrTransitionStates...)
+	for _, c := range cell {
+		for j, code := range codes {
+			if int(c) == j {
+				seq += code
+			}
+		}
+	}
+	return seq
+}
+
+/* old function kept just to precaution
 func decode(cell []byte) string {
 	s := make([]byte, len(cell))
 	for i, v := range cell {
@@ -287,3 +220,4 @@ func decode(cell []byte) string {
 	}
 	return string(s)
 }
+*/
