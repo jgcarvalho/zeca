@@ -2,6 +2,9 @@ package proteindb
 
 import (
 	// "github.com/jgcarvalho/zeca/ca"
+	"reflect"
+	"strings"
+
 	"gopkg.in/mgo.v2"
 	//"labix.org/v2/mgo/bson"
 	"fmt"
@@ -36,7 +39,15 @@ type Chain struct {
 	Ss3_cons_all                 string "ss3_cons_all"
 }
 
-func LoadProteinsFromMongo(ip string, db string, collection string) []Protein {
+type ProtdbConfig struct {
+	Ip         string `toml:"db-ip"`
+	Name       string `toml:"db-name"`
+	Collection string `toml:"collection-name"`
+	Init       string `toml:"init"`
+	Target     string `toml:"target"`
+}
+
+func loadProteinsFromMongo(ip string, db string, collection string) []Protein {
 	session, err := mgo.Dial(ip)
 	if err != nil {
 		fmt.Println("Can't connect to the database at", ip)
@@ -51,21 +62,28 @@ func LoadProteinsFromMongo(ip string, db string, collection string) []Protein {
 		panic(err)
 	}
 	// for i:=0; i<len(result); i++ {
-	// 	fmt.Println("ConsAll:", result[i].Chains[0].Ss3_cons_all)
+	// 	fmt.Println("ConsAll:", result[i].Chains[0].ss3_cons_all)
 	// }
 	return result
 }
 
-// func (p *Protein) CreateCA1D(end string, r rules.Params) ca.CellAuto1D {
-// 	switch end {
-// 	case "dssp":
-// 	case "stride":
-// 	case "kaksi":
-// 	case "pross":
-// 	case "dssp+stride":
-// 	case "dssp+pross":
-// 	}
+func (c *Chain) getField(field string) string {
+	r := reflect.ValueOf(c)
+	s := reflect.Indirect(r).FieldByName(field)
+	return s.String()
+}
 
-// 	c := ca.CreateCA1D(p.Pdb_id, begin, expectedEnd, rule)
-// 	return cas
-// }
+func GetProteins(db ProtdbConfig) (id, start, end string, e error) {
+	proteins := loadProteinsFromMongo(db.Ip, db.Name, db.Collection)
+	id = "all"
+	start = "#"
+	end = "#"
+	for i := 0; i < len(proteins); i++ {
+		start += proteins[i].Chains[0].getField(strings.Title(db.Init)) + "#"
+		end += proteins[i].Chains[0].getField(strings.Title(db.Target)) + "#"
+	}
+	if len(start) != len(end) {
+		e = fmt.Errorf("Error: Number of CA start cells is different from end cells")
+	}
+	return id, start, end, e
+}
