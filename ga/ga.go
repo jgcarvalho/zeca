@@ -28,13 +28,9 @@ func Run(conf Config) error {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Println("Loading proteins...")
-	proteins := proteindb.LoadProteinsFromMongo(conf.ProteinDB.Ip, conf.ProteinDB.Name, conf.ProteinDB.Collection)
-	prot_id := "20primeiras"
-	prot_seq := "#"
-	prot_ss := "#"
-	for i := 0; i < len(proteins); i++ {
-		prot_seq += proteins[i].Chains[0].Seq_pdb + "#"
-		prot_ss += proteins[i].Chains[0].Ss3_cons_all + "#"
+	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	if err != nil {
+		panic(err)
 	}
 
 	var pop Population
@@ -49,7 +45,7 @@ func Run(conf Config) error {
 		go func(pop *Population, i int) {
 			defer wg1.Done()
 			pop.rule[i], _ = rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
-			ca, _ := ca.Create1D(prot_id, prot_seq, prot_ss, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
+			ca, _ := ca.Create1D(id, start, end, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
 			pop.fitness[i] = Fitness(ca)
 		}(&pop, i) //preciso definir o que por aqui
 		if i%100 == 0 && i > 0 {
@@ -94,7 +90,7 @@ func Run(conf Config) error {
 				s := rand.Intn(len(selection.rule))
 				Mutate(selection.rule[s], conf.GA.Mutation)
 				pop.rule[p] = selection.rule[s]
-				ca, _ := ca.Create1D(prot_id, prot_seq, prot_ss, pop.rule[p], conf.CA.Steps, conf.CA.Consensus)
+				ca, _ := ca.Create1D(id, start, end, pop.rule[p], conf.CA.Steps, conf.CA.Consensus)
 				pop.fitness[p] = Fitness(ca)
 			}(&pop, p)
 			if p%10 == 0 && p > 0 {

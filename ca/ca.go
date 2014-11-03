@@ -19,6 +19,15 @@ type CellAuto1D struct {
 	consensus    int
 }
 
+type CaConfig struct {
+	InitStates  []string `toml:"initial-states"`
+	TransStates []string `toml:"transition-states"`
+	HasJoker    bool     `toml:"has-joker"`
+	R           int      `toml:"r"`
+	Steps       int      `toml:"steps"`
+	Consensus   int      `toml:"consensus"`
+}
+
 // Create1D creates a 1D cellular automata with id, initial state, expected final
 // state, transition rules, number of steps to evolve, and number of rows (last
 // rows) to create a consensus that will be compared with the expected final state
@@ -67,10 +76,15 @@ func (ca *CellAuto1D) Run() {
 			}
 			count := 0
 			for _, v := range col {
-				// maior caso haja em empate, o mais próximo ao fim terá preferencia
+				// maior ou igual pq caso haja em empate, o mais próximo ao fim terá preferencia
 				if bytes.Count(col, []byte{v}) >= count {
 					count = bytes.Count(col, []byte{v})
 					ca.EndConsensus[i] = v
+					//se a contagem for maior que a metade, então ela é o consenso e podemos
+					//continuar
+					if count > ca.consensus/2 {
+						break
+					}
 				}
 			}
 			// fmt.Println("Elements: ", col, " -> ", ca.EndConsensus[i])
@@ -112,6 +126,7 @@ func (ca *CellAuto1D) ConfusionMatrix() [][]int {
 	}
 	expected, predicted := 0, 0
 
+	// Isto pode ser otimizado para evitar a chamada dessa função "INDEXBYTE"
 	for i := range ca.Expected {
 		expected = bytes.IndexByte(ca.Rule.Prm.TransitionStates, ca.Expected[i])
 		predicted = bytes.IndexByte(ca.Rule.Prm.TransitionStates, ca.EndConsensus[i])

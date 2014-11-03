@@ -13,6 +13,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"runtime/pprof"
 
 	"github.com/BurntSushi/toml"
 )
@@ -97,7 +98,17 @@ func main() {
 	method := flag.Int("method", 0, "Algorithm to be used during cellular automata rule search. Options: "+
 		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing")
 	fnconfig := flag.String("config", "default", "Configuration file")
+	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	flag.Parse()
+
+	if *cpuprofile != "" {
+		f, err := os.Create(*cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 
 	switch *method {
 	case 1:

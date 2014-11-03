@@ -5,6 +5,16 @@ import (
 	"math/rand"
 )
 
+// Rule represents a CA rule
+type Rule struct {
+	Code  [][][]byte
+	Fixed [][][]bool
+	Prm   Params
+}
+
+// Params represents the parameters of the CA rule, with information about start
+// and transition rules, if there is a "wild card" in the transition states, and
+// the neighborhood size R
 type Params struct {
 	StrStartStates      []string
 	StrTransitionStates []string
@@ -14,12 +24,7 @@ type Params struct {
 	R                   uint8
 }
 
-type Rule struct {
-	Code  [][][]byte
-	Fixed [][][]bool
-	Prm   Params
-}
-
+//PrmDefault was used just for test. I'm not sure! :|
 var PrmDefault Params
 
 func init() {
@@ -29,10 +34,10 @@ func init() {
 	PrmDefault.R = 3
 }
 
-//	ruleStates recebe os parâmetros para a criação da regra e calcula quantos e quais estados
-//	tem que estar presentes na regra. Esses estados são formados da união do conjunto de estados
-//	de início (StartStates) com o conjunto de estados de transição (TransitionStates)
-//		[ls][s][rs]
+// RuleStates recebe os parâmetros para a criação da regra e calcula quantos e quais estados
+// tem que estar presentes na regra. Esses estados são formados da união do conjunto de estados
+// de início (StartStates) com o conjunto de estados de transição (TransitionStates)
+//      [ls][s][rs]
 //			 ↓
 //		 	[t]
 func RuleStates(prm Params) []byte {
@@ -55,6 +60,8 @@ func RuleStates(prm Params) []byte {
 	return st
 }
 
+// Create a new rule given the start states, transition states, if there is a joker
+// (which must be the last element in the transition states) and neighborhood r.
 func Create(sStates []string, tStates []string, hasjoker bool, r int) (*Rule, error) {
 	var ru Rule
 
@@ -71,6 +78,7 @@ func Create(sStates []string, tStates []string, hasjoker bool, r int) (*Rule, er
 	ru.Prm.Hasjoker = hasjoker
 	ru.Prm.R = uint8(r)
 
+	//all possible states
 	st := RuleStates(ru.Prm)
 	ru.Code = make([][][]byte, len(st))
 	ru.Fixed = make([][][]bool, len(st))
@@ -82,7 +90,8 @@ func Create(sStates []string, tStates []string, hasjoker bool, r int) (*Rule, er
 			ru.Fixed[ln][c] = make([]bool, len(st))
 			for rn := range st {
 				ru.Code[ln][c][rn] = ru.Prm.TransitionStates[rand.Intn(len(ru.Prm.TransitionStates))]
-				//
+				// c == 0 usually means # that represents the n and c terminal. it's not a residue
+				// but it's essencial to CA representation and must be fixed (never change)
 				if c == 0 {
 					ru.Code[ln][c][rn] = 0
 					ru.Fixed[ln][c][rn] = true
@@ -93,9 +102,6 @@ func Create(sStates []string, tStates []string, hasjoker bool, r int) (*Rule, er
 		}
 
 	}
-	// fmt.Println("states", st)
-	// fmt.Println("rules", rule.Code)
-	// fmt.Println(ru)
 	return &ru, nil
 }
 

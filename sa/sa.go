@@ -1,15 +1,16 @@
 package sa
 
 import (
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/metrics"
-	"github.com/jgcarvalho/zeca/proteindb"
-	"github.com/jgcarvalho/zeca/rules"
 	"fmt"
 	"io/ioutil"
 	"math"
 	"math/rand"
 	"time"
+
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Solution struct {
@@ -21,19 +22,14 @@ func Run(conf Config) error {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Println("Loading proteins...")
-	proteins := proteindb.LoadProteinsFromMongo(conf.ProteinDB.Ip, conf.ProteinDB.Name, conf.ProteinDB.Collection)
-	prot_id := "20primeiras"
-	prot_seq := "#"
-	prot_ss := "#"
-
-	for i := 0; i < len(proteins); i++ {
-		prot_seq += proteins[i].Chains[0].Seq_pdb + "#"
-		prot_ss += proteins[i].Chains[0].Ss3_cons_all + "#"
+	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	if err != nil {
+		panic(err)
 	}
 
 	fmt.Println("Initializing simulated annealing")
 	rule, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
-	cellauto, _ := ca.Create1D(prot_id, prot_seq, prot_ss, rule, conf.CA.Steps, conf.CA.Consensus)
+	cellauto, _ := ca.Create1D(id, start, end, rule, conf.CA.Steps, conf.CA.Consensus)
 
 	solution := &Solution{rule, Fitness(cellauto)}
 	solution_new := &Solution{rule, Fitness(cellauto)}
@@ -70,7 +66,7 @@ func Run(conf Config) error {
 		temp = alpha * temp
 	}
 
-	err := ioutil.WriteFile(conf.Rules.Output, []byte(solution_best.rule.String()), 0644)
+	err = ioutil.WriteFile(conf.Rules.Output, []byte(solution_best.rule.String()), 0644)
 	if err != nil {
 		fmt.Println("Erro gravar a melhor regra")
 		fmt.Println(solution_best.rule)

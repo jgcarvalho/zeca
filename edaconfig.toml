@@ -20,6 +20,7 @@ title = "Default EDA config"
 	db-ip = "localhost"
 	db-name = "proteindb_dev"
 	collection-name = "protein"
+	init = "seq_pdb"
 	target = "ss3_cons_all"
 
 [ca]

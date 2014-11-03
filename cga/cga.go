@@ -1,10 +1,6 @@
 package cga
 
 import (
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/metrics"
-	"github.com/jgcarvalho/zeca/proteindb"
-	"github.com/jgcarvalho/zeca/rules"
 	"bytes"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +8,11 @@ import (
 	"sort"
 	"sync"
 	"time"
+
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Probs struct {
@@ -24,13 +25,9 @@ func Run(conf Config) error {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Println("Loading proteins...")
-	proteins := proteindb.LoadProteinsFromMongo(conf.ProteinDB.Ip, conf.ProteinDB.Name, conf.ProteinDB.Collection)
-	prot_id := "20primeiras"
-	prot_seq := "#"
-	prot_ss := "#"
-	for i := 0; i < len(proteins); i++ {
-		prot_seq += proteins[i].Chains[0].Seq_pdb + "#"
-		prot_ss += proteins[i].Chains[0].Ss3_cons_all + "#"
+	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	if err != nil {
+		panic(err)
 	}
 
 	fmt.Println("Initializing probabilities...")
@@ -44,7 +41,7 @@ func Run(conf Config) error {
 
 	for i := 0; i < len(calist); i++ {
 		r := probs.GenRule()
-		calist[i], _ = ca.Create1D(prot_id, prot_seq, prot_ss, r, conf.CA.Steps, conf.CA.Consensus)
+		calist[i], _ = ca.Create1D(id, start, end, r, conf.CA.Steps, conf.CA.Consensus)
 	}
 
 	var wg1 sync.WaitGroup
@@ -65,14 +62,14 @@ func Run(conf Config) error {
 				defer wg1.Done()
 				calist[i].SetRule(probs.GenRule())
 			}(i)
-			// calist[i], _ = ca.Create1D(prot_id, prot_seq, prot_ss, r, conf.CA.Steps)
+			// calist[i], _ = ca.Create1D(id, start, end, r, conf.CA.Steps)
 		}
 		fmt.Printf("Waiting ")
 		wg1.Wait()
 		fmt.Println("OK")
 	}
 
-	err := ioutil.WriteFile(conf.CGA.OutputProbs, []byte(probs.String()), 0644)
+	err = ioutil.WriteFile(conf.CGA.OutputProbs, []byte(probs.String()), 0644)
 	if err != nil {
 		fmt.Println("Erro gravar as probabilidades")
 		fmt.Println(probs)

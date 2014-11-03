@@ -30,24 +30,22 @@ func Run(conf Config) error {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Println("Loading proteins...")
-	proteins := proteindb.LoadProteinsFromMongo(conf.ProteinDB.Ip, conf.ProteinDB.Name, conf.ProteinDB.Collection)
-	prot_id := "20primeiras"
-	prot_seq := "#"
-	prot_ss := "#"
-	for i := 0; i < len(proteins); i++ {
-		prot_seq += proteins[i].Chains[0].Seq_pdb + "#"
-		prot_ss += proteins[i].Chains[0].Ss3_cons_all + "#"
+	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	if err != nil {
+		panic(err)
 	}
 
 	fmt.Println("Initializing probabilities...")
-	rule, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
-	probs := NewProbs(rule.Prm)
-	fmt.Println(probs)
+	r, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
+	probs := NewProbs(r.Prm)
+	// fmt.Println(probs)
 
 	var pop Population
 
 	pop.rule = make([]*rules.Rule, conf.EDA.Population)
 	pop.fitness = make([]float64, conf.EDA.Population)
+
+	cellAuto := make([]*ca.CellAuto1D, conf.EDA.Population)
 
 	var wg1 sync.WaitGroup
 	// tmp := 0
@@ -56,8 +54,9 @@ func Run(conf Config) error {
 		go func(pop *Population, i int) {
 			defer wg1.Done()
 			pop.rule[i] = probs.GenRule()
-			ca, _ := ca.Create1D(prot_id, prot_seq, prot_ss, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
-			pop.fitness[i] = Fitness(ca)
+			// ca, _ := ca.Create1D(id, start, end, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
+			cellAuto[i], _ = ca.Create1D(id, start, end, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
+			pop.fitness[i] = Fitness(cellAuto[i])
 		}(&pop, i) //preciso definir o que por aqui
 		if i%100 == 0 && i > 0 {
 			fmt.Println("Waiting", i)
@@ -93,8 +92,9 @@ func Run(conf Config) error {
 			go func(pop *Population, j int) {
 				defer wg2.Done()
 				pop.rule[j] = probs.GenRule()
-				ca, _ := ca.Create1D(prot_id, prot_seq, prot_ss, pop.rule[j], conf.CA.Steps, conf.CA.Consensus)
-				pop.fitness[j] = Fitness(ca)
+				// ca, _ := ca.Create1D(id, start, end, pop.rule[j], conf.CA.Steps, conf.CA.Consensus)
+				cellAuto[j].SetRule(pop.rule[j])
+				pop.fitness[j] = Fitness(cellAuto[j])
 
 			}(&pop, j)
 			if j%10 == 0 && j > 0 {
@@ -109,7 +109,7 @@ func Run(conf Config) error {
 		plot.Histogram(pop.fitness, nil, i)
 	}
 
-	err := ioutil.WriteFile(conf.EDA.OutputProbs, []byte(probs.String()), 0644)
+	err = ioutil.WriteFile(conf.EDA.OutputProbs, []byte(probs.String()), 0644)
 	if err != nil {
 		fmt.Println("Erro gravar as probabilidades")
 		fmt.Println(probs)
