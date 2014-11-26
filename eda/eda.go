@@ -58,7 +58,7 @@ func Run(conf Config) error {
 			cellAuto[i], _ = ca.Create1D(id, start, end, pop.rule[i], conf.CA.Steps, conf.CA.Consensus)
 			pop.fitness[i] = Fitness(cellAuto[i])
 		}(&pop, i) //preciso definir o que por aqui
-		if i%100 == 0 && i > 0 {
+		if i%48 == 0 && i > 0 {
 			fmt.Println("Waiting", i)
 			wg1.Wait()
 		}
@@ -97,7 +97,7 @@ func Run(conf Config) error {
 				pop.fitness[j] = Fitness(cellAuto[j])
 
 			}(&pop, j)
-			if j%10 == 0 && j > 0 {
+			if j%24 == 0 && j > 0 {
 				fmt.Println("Waiting", j)
 				wg2.Wait()
 			}

@@ -11,7 +11,7 @@ type Config struct {
 	SA        saConfig
 	Rules     ruleConfig
 	ProteinDB proteindb.ProtdbConfig
-	CA        ca.CaConfig
+	CA        ca.Config
 }
 
 type algoConfig struct {

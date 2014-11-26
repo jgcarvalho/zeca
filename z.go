@@ -99,6 +99,7 @@ func main() {
 		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing")
 	fnconfig := flag.String("config", "default", "Configuration file")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
+	memprofile := flag.String("memprofile", "", "write memory profile to this file")
 	flag.Parse()
 
 	if *cpuprofile != "" {
@@ -108,6 +109,15 @@ func main() {
 		}
 		pprof.StartCPUProfile(f)
 		defer pprof.StopCPUProfile()
+	}
+
+	if *memprofile != "" {
+		f, err := os.Create(*memprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		pprof.WriteHeapProfile(f)
+		defer f.Close()
 	}
 
 	switch *method {
