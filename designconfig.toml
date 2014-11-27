@@ -4,22 +4,23 @@ title = "Default Design config"
 	method = "design"
 
 [design]
-	generations = 10
-	population = 100
-	selection = 400
-	tournament = 4
+	# generations = 10
+	population = 10000
+	# selection = 400
+	# tournament = 4
 	output-probabilities = "./output-probabilities-eda"
-	save-steps = 1000
+	# save-steps = 1000
 
 [rules]
 	# Input rule is optional
-	#input = "./optional"
+	# input = "./optional"
 	output = "./output-rules"
 
 [proteindb]
 	db-ip = "localhost"
 	db-name = "proteindb_dev"
 	collection-name = "protein"
+	init = "seq_pdb"
 	target = "ss3_cons_all"
 
 [ca]

@@ -19,14 +19,14 @@ type algoConfig struct {
 }
 
 type designConfig struct {
-	Generations int
+	//Generations int
 	Population  int
 	Selection   int
-	Tournament  int
-	CrossOver   int
-	Mutation    float64
+	//Tournament  int
+	//CrossOver   int
+	//Mutation    float64
 	OutputProbs string `toml:"output-probabilities"`
-	SaveSteps   int    `toml:"save-steps"`
+	//SaveSteps   int    `toml:"save-steps"`
 }
 
 type ruleConfig struct {
