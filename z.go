@@ -7,6 +7,8 @@ import (
 	"github.com/jgcarvalho/zeca/eda"
 	"github.com/jgcarvalho/zeca/ga"
 	"github.com/jgcarvalho/zeca/sa"
+	// dist importado do branch
+	"github.com/jgcarvalho/zeca/zeca/dist"
 	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
 	"fmt"
@@ -74,6 +76,34 @@ func runSA(fnconfig string) {
 	sa.Run(conf)
 }
 
+func runMasterEDA(fnconfig string) {
+	var conf dist.Config
+	md, err := toml.DecodeFile(fnconfig, &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(md.Undecoded()) > 0 {
+		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		return
+	}
+	fmt.Println("Configuration:", conf)
+	dist.RunMaster(conf)
+}
+
+func runSlaveEDA(fnconfig string) {
+	var conf dist.Config
+	md, err := toml.DecodeFile(fnconfig, &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(md.Undecoded()) > 0 {
+		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		return
+	}
+	fmt.Println("Configuration:", conf)
+	dist.RunMaster(conf)
+}
+
 func runDesign(fnconfig string) {
 	var conf design.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
@@ -96,7 +126,8 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	method := flag.Int("method", 0, "Algorithm to be used during cellular automata rule search. Options: "+
-		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing")
+		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing; (4) GA;"+
+		" (5) Distributed EDA (MASTER); (6) Distributed EDA (SLAVE)")
 	fnconfig := flag.String("config", "default", "Configuration file")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write memory profile to this file")
@@ -144,6 +175,18 @@ func main() {
 			runGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/gaconfig.toml")
 		} else {
 			runGA(*fnconfig)
+		}
+	case 5:
+		if *fnconfig == "default" {
+			runMasterEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
+		} else {
+			runMasterEDA(*fnconfig)
+		}
+	case 6:
+		if *fnconfig == "default" {
+			runSlaveEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
+		} else {
+			runSlaveEDA(*fnconfig)
 		}
 	case 9:
 		if *fnconfig == "default" {

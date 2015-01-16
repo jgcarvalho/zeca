@@ -1,0 +1,37 @@
+title = "Distributed EDA config"
+
+[dist]
+	nats-server = "nats://localhost:4222"
+	topic-master = "probabilites"
+	topic-slave = "fitness"
+
+[algorithm]
+	method = "eda"
+
+[eda]
+	generations = 10
+	population = 100
+	selection = 400
+	tournament = 4
+	output-probabilities = "./output-probabilities-eda"
+	save-steps = 1000
+
+[rules]
+	# Input rule is optional
+	#input = "./optional"
+	output = "./output-rules"
+
+[proteindb]
+	db-ip = "localhost"
+	db-name = "proteindb_dev"
+	collection-name = "protein"
+	init = "seq_pdb"
+	target = "ss3_cons_all"
+
+[ca]
+	initial-states = ["#","A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
+	transition-states = ["-","*","|","?"]
+	has-joker = true
+	r = 3
+	steps = 100
+	consensus = 5
