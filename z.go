@@ -101,7 +101,7 @@ func runSlaveEDA(fnconfig string) {
 		return
 	}
 	fmt.Println("Configuration:", conf)
-	dist.RunMaster(conf)
+	dist.RunSlave(conf)
 }
 
 func runDesign(fnconfig string) {
