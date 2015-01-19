@@ -8,7 +8,7 @@ import (
 	"github.com/jgcarvalho/zeca/ga"
 	"github.com/jgcarvalho/zeca/sa"
 	// dist importado do branch
-	"github.com/jgcarvalho/zeca/zeca/dist"
+	"github.com/jgcarvalho/zeca/dist"
 	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
 	"fmt"
