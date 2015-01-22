@@ -90,6 +90,20 @@ func runMasterEDA(fnconfig string) {
 	dist.RunMaster(conf)
 }
 
+func runSlaveAsyncEDA(fnconfig string) {
+	var conf dist.Config
+	md, err := toml.DecodeFile(fnconfig, &conf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if len(md.Undecoded()) > 0 {
+		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		return
+	}
+	fmt.Println("Configuration:", conf)
+	dist.RunSlaveAsync(conf)
+}
+
 func runSlaveEDA(fnconfig string) {
 	var conf dist.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
@@ -127,7 +141,7 @@ func main() {
 
 	method := flag.Int("method", 0, "Algorithm to be used during cellular automata rule search. Options: "+
 		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing; (4) GA;"+
-		" (5) Distributed EDA (MASTER); (6) Distributed EDA (SLAVE)")
+		" (5) Distributed EDA (MASTER); (6) Distributed EDA (SLAVE); (7) Distributed EDA (SLAVE ASYNC)")
 	fnconfig := flag.String("config", "default", "Configuration file")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write memory profile to this file")
@@ -187,6 +201,12 @@ func main() {
 			runSlaveEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
 		} else {
 			runSlaveEDA(*fnconfig)
+		}
+	case 7:
+		if *fnconfig == "default" {
+			runSlaveAsyncEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
+		} else {
+			runSlaveAsyncEDA(*fnconfig)
 		}
 	case 9:
 		if *fnconfig == "default" {
