@@ -212,7 +212,8 @@ func RunSlave(conf Config) {
 			json.Unmarshal(m.Data, &prob)
 			fmt.Printf("PID: %d, Geracacao: %d\n", prob.PID, prob.Generation)
 			for i := 0; i < len(tourn.rule); i++ {
-				p_tmp.probs = prob.Data
+				// p_tmp.probs = prob.Data
+				copy(p_tmp.probs, prob.Data)
 				tourn.rule[i] = p_tmp.GenRule()
 				// cellAuto[i], _ = ca.Create1D(id, start, end, tourn.rule[i], conf.CA.Steps, conf.CA.Consensus)
 				// fmt.Println(cellAuto[i])
@@ -229,7 +230,8 @@ func RunSlave(conf Config) {
 			// i++
 		} else if prob.PID != 0 {
 			for i := 0; i < len(tourn.rule); i++ {
-				p_tmp.probs = prob.Data
+				// p_tmp.probs = prob.Data
+				copy(p_tmp.probs, prob.Data)
 				tourn.rule[i] = p_tmp.GenRule()
 				cellAuto[i].SetRule(tourn.rule[i])
 				tourn.fitness[i] = Fitness(cellAuto[i])
