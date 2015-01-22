@@ -90,7 +90,7 @@ func RunMaster(conf Config) {
 		for i := 0; i < len(pop.rule); {
 			// fmt.Println("GERACAO", g, "INDIVIDUO", i)
 			// recebe regras e fitness dos slaves
-			m, err := sub.NextMsg(1 * time.Second)
+			m, err := sub.NextMsg(10 * time.Millisecond)
 			if err == nil {
 				var ind Individual
 				json.Unmarshal(m.Data, &ind)
