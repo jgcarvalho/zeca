@@ -9,6 +9,8 @@ import (
 	"github.com/jgcarvalho/zeca/sa"
 	// dist importado do branch
 	"github.com/jgcarvalho/zeca/dist"
+
+	"github.com/jgcarvalho/zeca/disteda"
 	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
 	"fmt"
@@ -77,7 +79,7 @@ func runSA(fnconfig string) {
 }
 
 func runMasterEDA(fnconfig string) {
-	var conf dist.Config
+	var conf disteda.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
 	if err != nil {
 		log.Fatal(err)
@@ -87,7 +89,7 @@ func runMasterEDA(fnconfig string) {
 		return
 	}
 	fmt.Println("Configuration:", conf)
-	dist.RunMaster(conf)
+	disteda.RunMaster(conf)
 }
 
 func runSlaveAsyncEDA(fnconfig string) {
@@ -105,7 +107,7 @@ func runSlaveAsyncEDA(fnconfig string) {
 }
 
 func runSlaveEDA(fnconfig string) {
-	var conf dist.Config
+	var conf disteda.Config
 	md, err := toml.DecodeFile(fnconfig, &conf)
 	if err != nil {
 		log.Fatal(err)
@@ -115,7 +117,7 @@ func runSlaveEDA(fnconfig string) {
 		return
 	}
 	fmt.Println("Configuration:", conf)
-	dist.RunSlave(conf)
+	disteda.RunSlave(conf)
 }
 
 func runDesign(fnconfig string) {
