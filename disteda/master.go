@@ -20,11 +20,6 @@ func RunMaster(conf Config) {
 	defer receiver.Close()
 	receiver.Bind("tcp://*:5558")
 
-	fmt.Print("Press Enter when the workers are ready: ")
-	var line string
-	fmt.Scanln(&line)
-	fmt.Println("Sending tasks to workers...")
-
 	// gerar (ou ler -> TODO) as probabilidades iniciais
 	r, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
 	p := NewProbs(r.Prm)
@@ -32,8 +27,17 @@ func RunMaster(conf Config) {
 	var pop Population
 	pop.rule = make([]*rules.Rule, conf.EDA.Population/conf.EDA.Tournament)
 	pop.fitness = make([]float64, conf.EDA.Population/conf.EDA.Tournament)
+	//inicializar a populacao
+	for i := 0; i < len(pop.rule); i++ {
+		pop.rule[i] = p.GenRule()
+	}
 
 	var ind Individual
+
+	fmt.Print("Press Enter when the workers are ready: ")
+	var line string
+	fmt.Scanln(&line)
+	fmt.Println("Sending tasks to workers...")
 
 	fmt.Println("RUNNING MASTER")
 	// para cada geracao
@@ -66,7 +70,16 @@ func RunMaster(conf Config) {
 				if prob.PID == ind.PID {
 
 					//TODO urgente É preciso copiar "copy"***************************************************************
-					pop.rule[i] = ind.Rule
+					for l := range ind.Rule.Code {
+						for c := range ind.Rule.Code[l] {
+							copy(pop.rule[i].Code[l][c], ind.Rule.Code[l][c])
+							//nao esta copiando as regras fixas e os params. Sera q é necessário?
+							// copy(pop.rule[i].Fixed[l][c], ind.Rule.Fixed[l][c])
+							// pop.rule[i].Prm = ind.Rule.Prm
+						}
+					}
+
+					// pop.rule[i] = ind.Rule
 					pop.fitness[i] = ind.Fitness
 					fmt.Printf("Individuo id: %d rid: %d g: %d, score: %f\n", g*len(pop.rule)+i, ind.PID, ind.Generation, ind.Fitness)
 					i++
