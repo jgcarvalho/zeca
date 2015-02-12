@@ -1,9 +1,9 @@
 title = "Distributed EDA config"
 
 [dist]
-	nats-server = "nats://localhost:4222"
-	topic-master = "probabilites"
-	topic-slave = "fitness"
+	master-url = "localhost"
+	port-a = "5557"
+	port-b = "5558"
 
 [algorithm]
 	method = "eda"

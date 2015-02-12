@@ -18,12 +18,12 @@ func RunSlave(conf Config) {
 	//  Socket to receive messages on
 	receiver, _ := zmq.NewSocket(zmq.PULL)
 	defer receiver.Close()
-	receiver.Connect("tcp://localhost:5557")
+	receiver.Connect("tcp://" + conf.Dist.MasterURL + ":" + conf.Dist.PortA)
 
 	//  Socket to send messages to
 	sender, _ := zmq.NewSocket(zmq.PUSH)
 	defer sender.Close()
-	sender.Connect("tcp://localhost:5558")
+	sender.Connect("tcp://" + conf.Dist.MasterURL + ":" + conf.Dist.PortB)
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
@@ -48,10 +48,17 @@ func RunSlave(conf Config) {
 		cellAuto[i], _ = ca.Create1D(id, start, end, tourn.rule[i], conf.CA.Steps, conf.CA.Consensus)
 	}
 
+	var (
+		ind    Individual
+		b      []byte
+		m      string
+		conerr error
+	)
+
 	for {
-		m, err := receiver.Recv(0)
+		m, conerr = receiver.Recv(0)
 		// m, err := conn.Request(conf.Dist.TopicFromMaster, []byte("get"), 2*time.Second)
-		if err == nil {
+		if conerr == nil {
 			// para cada individuo no torneio
 			// gera uma regra de acordo com a probabilidade atual
 			// roda o automato celular
@@ -70,8 +77,11 @@ func RunSlave(conf Config) {
 				fmt.Println("Individuo", i, "Fitness", tourn.fitness[i])
 			}
 			sort.Sort(sort.Reverse(tourn))
-			ind := &Individual{PID: prob.PID, Generation: prob.Generation, Rule: tourn.rule[0], Fitness: tourn.fitness[0]}
-			b, _ := json.Marshal(ind)
+			ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn.rule[0], tourn.fitness[0]
+
+			//não é preciso criar
+			// ind := &Individual{PID: prob.PID, Generation: prob.Generation, Rule: tourn.rule[0], Fitness: tourn.fitness[0]}
+			b, _ = json.Marshal(ind)
 			fmt.Println("Fitness selecionado", tourn.fitness[0])
 			sender.Send(string(b), 0)
 

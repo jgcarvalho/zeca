@@ -8,7 +8,6 @@ import (
 	"github.com/jgcarvalho/zeca/ga"
 	"github.com/jgcarvalho/zeca/sa"
 	// dist importado do branch
-	"github.com/jgcarvalho/zeca/dist"
 
 	"github.com/jgcarvalho/zeca/disteda"
 	// "github.com/jgcarvalho/zeca/rules"
@@ -90,20 +89,6 @@ func runMasterEDA(fnconfig string) {
 	}
 	fmt.Println("Configuration:", conf)
 	disteda.RunMaster(conf)
-}
-
-func runSlaveAsyncEDA(fnconfig string) {
-	var conf dist.Config
-	md, err := toml.DecodeFile(fnconfig, &conf)
-	if err != nil {
-		log.Fatal(err)
-	}
-	if len(md.Undecoded()) > 0 {
-		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
-		return
-	}
-	fmt.Println("Configuration:", conf)
-	dist.RunSlaveAsync(conf)
 }
 
 func runSlaveEDA(fnconfig string) {
@@ -203,12 +188,6 @@ func main() {
 			runSlaveEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
 		} else {
 			runSlaveEDA(*fnconfig)
-		}
-	case 7:
-		if *fnconfig == "default" {
-			runSlaveAsyncEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
-		} else {
-			runSlaveAsyncEDA(*fnconfig)
 		}
 	case 9:
 		if *fnconfig == "default" {

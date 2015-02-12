@@ -21,10 +21,10 @@ type Probs struct {
 	rulePrm rules.Params
 }
 
-type Population struct {
-	rule    []*rules.Rule
-	fitness []float64
-}
+// type Population struct {
+// 	rule    []*rules.Rule
+// 	fitness []float64
+// }
 
 type Tournament struct {
 	rule    []*rules.Rule
@@ -78,7 +78,7 @@ func NewProbs(prm rules.Params) *Probs {
 	return &p
 }
 
-func (p *Probs) AdjustProbs(pop Population) {
+func (p *Probs) AdjustProbs(pop []Individual) {
 	// n := len(pop.rule)
 
 	var count [][][][]float64
@@ -94,24 +94,24 @@ func (p *Probs) AdjustProbs(pop Population) {
 			}
 		}
 	}
-	for j := 0; j < len(pop.rule); j++ {
-		n := len(pop.rule[0].Code)
+	for j := 0; j < len(pop); j++ {
+		n := len(pop[0].Rule.Code)
 		for ln := 0; ln < n; ln++ {
 			for c := 0; c < n; c++ {
 				for rn := 0; rn < n; rn++ {
-					index := bytes.IndexByte(p.rulePrm.TransitionStates, pop.rule[j].Code[ln][c][rn])
+					index := bytes.IndexByte(p.rulePrm.TransitionStates, pop[j].Rule.Code[ln][c][rn])
 					count[ln][c][rn][index] += 1
 				}
 			}
 		}
 	}
 
-	n := len(pop.rule[0].Code)
+	n := len(pop[0].Rule.Code)
 	for ln := 0; ln < n; ln++ {
 		for c := 0; c < n; c++ {
 			for rn := 0; rn < n; rn++ {
 				for i := 0; i < len(count[ln][c][rn]); i++ {
-					p.probs[ln][c][rn][i] = count[ln][c][rn][i] / float64(len(pop.rule))
+					p.probs[ln][c][rn][i] = count[ln][c][rn][i] / float64(len(pop))
 				}
 				// fmt.Printf("Contagem %f %f %f %f \n", count[ln][c][rn][0], count[ln][c][rn][1], count[ln][c][rn][2], count[ln][c][rn][3])
 				// fmt.Printf("len pop rule %d \n", len(pop.rule))

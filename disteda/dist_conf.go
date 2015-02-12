@@ -34,7 +34,7 @@ type ruleConfig struct {
 }
 
 type distConfig struct {
-	NatsServerURL   string `toml:"nats-server"`
-	TopicFromMaster string `toml:"topic-master"`
-	TopicFromSlave  string `toml:"topic-slave"`
+	MasterURL string `toml:"master-url"`
+	PortA     string `toml:"port-a"`
+	PortB     string `toml:"port-b"`
 }
