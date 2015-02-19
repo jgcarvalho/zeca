@@ -229,11 +229,16 @@ func (ca *CellAuto1D) ConfusionMatrix() [][]int {
 	}
 	expected, predicted := 0, 0
 
-	// Isto pode ser otimizado para evitar a chamada dessa função "INDEXBYTE"
+	// create dictionary to identify the state index to be used in CM
+	dic := make(map[byte]int)
+	for _, v := range ca.Rule.Prm.TransitionStates {
+		dic[v] = bytes.IndexByte(ca.Rule.Prm.TransitionStates, v)
+	}
+
+	// Isto pode ser otimizado para evitar a chamada dessa função "INDEXBYTE" [OK]
 	for i, v := range *ca.Expected {
-		//expected = bytes.IndexByte(ca.Rule.Prm.TransitionStates, ca.Expected[i])
-		expected = bytes.IndexByte(ca.Rule.Prm.TransitionStates, v)
-		predicted = bytes.IndexByte(ca.Rule.Prm.TransitionStates, ca.EndConsensus[i])
+		expected = dic[v]
+		predicted = dic[ca.EndConsensus[i]]
 
 		if (ca.Rule.Prm.Hasjoker && expected == len(ca.Rule.Prm.TransitionStates)-1) || expected == -1 {
 			continue
