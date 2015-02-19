@@ -42,7 +42,8 @@ func Fitness(c *ca.CellAuto1D) float64 {
 	c.Run()
 	cm := c.ConfusionMatrix()
 	cba := metrics.CBA(cm)
-	// fmt.Println("CBA: ", cba)
+	fmt.Println("CBA: ", cba)
+	fmt.Println("Q3: ", metrics.Q3(cm))
 	return cba
 }
 
