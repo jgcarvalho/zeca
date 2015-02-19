@@ -4,8 +4,25 @@ import (
 	"math"
 )
 
-func MatthewsCorr(cm [][]int) float64 {
+func MCC(cm [][]int) float64 {
+	// mcc := 0.0
+
 	return -1.0
+}
+
+func Q3(cm [][]int) float64 {
+	n_trues := 0
+	n_falses := 0
+	for i := range cm {
+		for j := range cm[i] {
+			if i == j {
+				n_trues += cm[i][j]
+			} else {
+				n_falses += cm[i][j]
+			}
+		}
+	}
+	return float64(n_trues) / float64(n_trues+n_falses)
 }
 
 // Class Balance Accuracy
