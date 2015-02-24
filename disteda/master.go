@@ -4,7 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"hash/adler32"
+	"io/ioutil"
+	"os"
+	"strconv"
 
+	"github.com/gonum/stat"
 	zmq "github.com/pebbe/zmq4"
 
 	"github.com/jgcarvalho/zeca/rules"
@@ -26,6 +30,15 @@ func RunMaster(conf Config) {
 
 	var pop []Individual
 	pop = make([]Individual, conf.EDA.Population/conf.EDA.Tournament)
+
+	popFitness := make([]float64, conf.EDA.Population/conf.EDA.Tournament)
+	popQ3 := make([]float64, conf.EDA.Population/conf.EDA.Tournament)
+
+	fstat, err := os.Create("log")
+	if err != nil {
+		panic(err)
+	}
+	defer fstat.Close()
 
 	fmt.Print("Press Enter when the workers are ready: ")
 	var line string
@@ -70,7 +83,19 @@ func RunMaster(conf Config) {
 			}
 		}
 
-		// imprimir e as estatisticas
+		// imprimir e as estatisticas// salva as probabilidades a cada geração
+		err := ioutil.WriteFile(conf.EDA.OutputProbs+"_g"+strconv.Itoa(g), []byte(p.String()), 0644)
+		if err != nil {
+			fmt.Println("Erro gravar as probabilidades")
+			fmt.Println(p)
+		}
+
+		//  imprimir e as estatisticas
+		meanFit, stdFit := stat.MeanStdDev(popFitness, nil)
+		meanQ3, stdQ3 := stat.MeanStdDev(popQ3, nil)
+		fstat.WriteString(fmt.Sprintf("G: %d, Mean: %.5f, StdDev: %.5f, Mean Q3: %.5f, StdDev Q3: %.5f, \n", g, meanFit, stdFit, meanQ3, stdQ3))
+		fmt.Printf("G: %d, Mean: %.5f, StdDev: %.5f, Mean Q3: %.5f, StdDev Q3: %.5f, \n", g, meanFit, stdFit, meanQ3, stdQ3)
+
 	}
 	// salvar a melhor regra
 
