@@ -21,21 +21,19 @@ type Probs struct {
 	rulePrm rules.Params
 }
 
-// type Population struct {
+type Tournament []Individual
+
+// type Tournament struct {
 // 	rule    []*rules.Rule
 // 	fitness []float64
 // }
-
-type Tournament struct {
-	rule    []*rules.Rule
-	fitness []float64
-}
 
 type Individual struct {
 	PID        uint32
 	Generation int
 	Rule       *rules.Rule
 	Fitness    float64
+	Q3         float64
 }
 
 func Fitness(c *ca.CellAuto1D) float64 {
@@ -116,7 +114,7 @@ func (p *Probs) AdjustProbs(pop []Individual) {
 				}
 				// fmt.Printf("Contagem %f %f %f %f \n", count[ln][c][rn][0], count[ln][c][rn][1], count[ln][c][rn][2], count[ln][c][rn][3])
 				// fmt.Printf("len pop rule %d \n", len(pop.rule))
-				fmt.Printf("Probabilidade %f %f %f %f \n", p.probs[ln][c][rn][0], p.probs[ln][c][rn][1], p.probs[ln][c][rn][2], p.probs[ln][c][rn][3])
+				// fmt.Printf("Probabilidade %f %f %f %f \n", p.probs[ln][c][rn][0], p.probs[ln][c][rn][1], p.probs[ln][c][rn][2], p.probs[ln][c][rn][3])
 			}
 		}
 	}
@@ -152,16 +150,19 @@ func (p *Probs) GenRule() *rules.Rule {
 }
 
 func (t Tournament) Len() int {
-	return len(t.rule)
+	// return len(t.rule)
+	return len(t)
 }
 
 func (t Tournament) Swap(i, j int) {
-	t.rule[i], t.rule[j] = t.rule[j], t.rule[i]
-	t.fitness[i], t.fitness[j] = t.fitness[j], t.fitness[i]
+	// t.rule[i], t.rule[j] = t.rule[j], t.rule[i]
+	// t.fitness[i], t.fitness[j] = t.fitness[j], t.fitness[i]
+	t[i], t[j] = t[j], t[i]
 }
 
 func (t Tournament) Less(i, j int) bool {
-	return t.fitness[i] < t.fitness[j]
+	// return t.fitness[i] < t.fitness[j]
+	return t[i].Fitness < t[j].Fitness
 }
 
 func (p *Probs) String() string {

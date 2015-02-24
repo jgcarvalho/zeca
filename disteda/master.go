@@ -72,7 +72,8 @@ func RunMaster(conf Config) {
 			if err == nil {
 				json.Unmarshal([]byte(m), &pop[i])
 				if prob.PID == pop[i].PID {
-					fmt.Printf("Individuo id: %d rid: %d g: %d, score: %f\n", g*len(pop)+i, pop[i].PID, pop[i].Generation, pop[i].Fitness)
+					// fmt.Printf("Individuo id: %d rid: %d g: %d, score: %f\n", g*len(pop)+i, pop[i].PID, pop[i].Generation, pop[i].Fitness)
+					popFitness[i] = pop[i].Fitness
 					i++
 				} else {
 					fmt.Println(prob.PID, pop[i].PID)

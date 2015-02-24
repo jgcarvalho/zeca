@@ -37,15 +37,19 @@ func RunSlave(conf Config) {
 	var prob Probabilities
 
 	var tourn Tournament
-	tourn.rule = make([]*rules.Rule, conf.EDA.Tournament)
-	tourn.fitness = make([]float64, conf.EDA.Tournament)
+	tourn = make([]Individual, conf.EDA.Tournament)
+	// tourn.rule = make([]*rules.Rule, conf.EDA.Tournament)
+	// tourn.fitness = make([]float64, conf.EDA.Tournament)
 
 	r, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
 	p_tmp := NewProbs(r.Prm)
 	cellAuto := make([]*ca.CellAuto1D, conf.EDA.Tournament)
 	for i := 0; i < conf.EDA.Tournament; i++ {
-		tourn.rule[i] = p_tmp.GenRule()
-		cellAuto[i], _ = ca.Create1D(id, start, end, tourn.rule[i], conf.CA.Steps, conf.CA.Consensus)
+		// tourn.rule[i] = p_tmp.GenRule()
+		tourn[i].Rule = p_tmp.GenRule()
+
+		// cellAuto[i], _ = ca.Create1D(id, start, end, tourn.rule[i], conf.CA.Steps, conf.CA.Consensus)
+		cellAuto[i], _ = ca.Create1D(id, start, end, tourn[i].Rule, conf.CA.Steps, conf.CA.Consensus)
 	}
 
 	var (
@@ -67,22 +71,30 @@ func RunSlave(conf Config) {
 			// retorna sua regra e seu fitness)
 			json.Unmarshal([]byte(m), &prob)
 			fmt.Printf("PID: %d, Geracacao: %d\n", prob.PID, prob.Generation)
-			for i := 0; i < len(tourn.rule); i++ {
+			// for i := 0; i < len(tourn.rule); i++ {
+			for i := 0; i < len(tourn); i++ {
 
 				copy(p_tmp.probs, prob.Data)
-				tourn.rule[i] = p_tmp.GenRule()
+				// tourn.rule[i] = p_tmp.GenRule()
+				tourn[i].Rule = p_tmp.GenRule()
 
-				cellAuto[i].SetRule(tourn.rule[i])
-				tourn.fitness[i] = Fitness(cellAuto[i])
-				fmt.Println("Individuo", i, "Fitness", tourn.fitness[i])
+				// cellAuto[i].SetRule(tourn.rule[i])
+				cellAuto[i].SetRule(tourn[i].Rule)
+				// tourn.fitness[i] = Fitness(cellAuto[i])
+				tourn[i].Fitness = Fitness(cellAuto[i])
+
+				// fmt.Println("Individuo", i, "Fitness", tourn.fitness[i])
+				fmt.Println("Individuo", i, "Fitness", tourn[i].Fitness)
+
 			}
 			sort.Sort(sort.Reverse(tourn))
-			ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn.rule[0], tourn.fitness[0]
+			// ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn.rule[0], tourn.fitness[0]
+			ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn[0].Rule, tourn[0].Fitness
 
 			//não é preciso criar
 			// ind := &Individual{PID: prob.PID, Generation: prob.Generation, Rule: tourn.rule[0], Fitness: tourn.fitness[0]}
 			b, _ = json.Marshal(ind)
-			fmt.Println("Fitness selecionado", tourn.fitness[0])
+			fmt.Println("Fitness selecionado", tourn[0].Fitness)
 			sender.Send(string(b), 0)
 
 		} else {
