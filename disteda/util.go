@@ -163,3 +163,26 @@ func (t Tournament) Swap(i, j int) {
 func (t Tournament) Less(i, j int) bool {
 	return t.fitness[i] < t.fitness[j]
 }
+
+func (p *Probs) String() string {
+	codes := append(p.rulePrm.StrStartStates, p.rulePrm.StrTransitionStates...)
+	var toprint string
+	toprint += fmt.Sprintf("[l][c][r] ->")
+	for _, v := range p.rulePrm.StrTransitionStates {
+		toprint += fmt.Sprintf(" %s", v)
+	}
+	toprint += fmt.Sprintln()
+	for c := 0; c < len(p.probs); c++ {
+		for ln := 0; ln < len(p.probs); ln++ {
+			for rn := 0; rn < len(p.probs); rn++ {
+				toprint += fmt.Sprintf("[%s][%s][%s] ->", codes[ln], codes[c], codes[rn])
+				for _, v := range p.probs[ln][c][rn] {
+					toprint += fmt.Sprintf(" %.4f", v)
+				}
+				toprint += fmt.Sprintln()
+
+			}
+		}
+	}
+	return toprint
+}
