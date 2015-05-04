@@ -41,8 +41,17 @@ func Fitness(c *ca.CellAuto1D) float64 {
 	cm := c.ConfusionMatrix()
 	cba := metrics.CBA(cm)
 	fmt.Println("CBA: ", cba)
-	fmt.Println("Q3: ", metrics.Q3(cm))
 	return cba
+}
+
+func FitnessAndQ3(c *ca.CellAuto1D) (float64, float64) {
+	c.Run()
+	cm := c.ConfusionMatrix()
+	cba := metrics.CBA(cm)
+	q3 := metrics.Q3(cm)
+	fmt.Println("CBA: ", cba)
+	fmt.Println("Q3: ", q3)
+	return cba, q3
 }
 
 func NewProbs(prm rules.Params) *Probs {

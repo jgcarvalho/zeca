@@ -74,6 +74,7 @@ func RunMaster(conf Config) {
 				if prob.PID == pop[i].PID {
 					// fmt.Printf("Individuo id: %d rid: %d g: %d, score: %f\n", g*len(pop)+i, pop[i].PID, pop[i].Generation, pop[i].Fitness)
 					popFitness[i] = pop[i].Fitness
+					popQ3[i] = pop[i].Q3
 					i++
 				} else {
 					fmt.Println(prob.PID, pop[i].PID)

@@ -81,7 +81,7 @@ func RunSlave(conf Config) {
 				// cellAuto[i].SetRule(tourn.rule[i])
 				cellAuto[i].SetRule(tourn[i].Rule)
 				// tourn.fitness[i] = Fitness(cellAuto[i])
-				tourn[i].Fitness = Fitness(cellAuto[i])
+				tourn[i].Fitness, tourn[i].Q3 = FitnessAndQ3(cellAuto[i])
 
 				// fmt.Println("Individuo", i, "Fitness", tourn.fitness[i])
 				fmt.Println("Individuo", i, "Fitness", tourn[i].Fitness)
@@ -89,7 +89,7 @@ func RunSlave(conf Config) {
 			}
 			sort.Sort(sort.Reverse(tourn))
 			// ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn.rule[0], tourn.fitness[0]
-			ind.PID, ind.Generation, ind.Rule, ind.Fitness = prob.PID, prob.Generation, tourn[0].Rule, tourn[0].Fitness
+			ind.PID, ind.Generation, ind.Rule, ind.Fitness, ind.Q3 = prob.PID, prob.Generation, tourn[0].Rule, tourn[0].Fitness, tourn[0].Q3
 
 			//não é preciso criar
 			// ind := &Individual{PID: prob.PID, Generation: prob.Generation, Rule: tourn.rule[0], Fitness: tourn.fitness[0]}
