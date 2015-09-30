@@ -128,7 +128,7 @@ func main() {
 
 	method := flag.Int("method", 0, "Algorithm to be used during cellular automata rule search. Options: "+
 		"(1) compact genetic algorithm; (2) EDA; (3) simulated annealing; (4) GA;"+
-		" (5) Distributed EDA (MASTER); (6) Distributed EDA (SLAVE); (7) Distributed EDA (SLAVE ASYNC)")
+		" (5) Distributed EDA (MASTER); (6) Distributed EDA (SLAVE);")
 	fnconfig := flag.String("config", "default", "Configuration file")
 	cpuprofile := flag.String("cpuprofile", "", "write cpu profile to file")
 	memprofile := flag.String("memprofile", "", "write memory profile to this file")

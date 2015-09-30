@@ -75,9 +75,7 @@ func NewProbs(prm rules.Params) *Probs {
 						} else {
 							p.probs[ln][c][rn][pv] = 0.0
 						}
-
 					}
-
 				}
 			}
 		}
