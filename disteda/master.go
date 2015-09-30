@@ -15,7 +15,7 @@ import (
 
 func RunMaster(conf Config) {
 
-	// cria o emissor que envia as regras para toda a rede na porta A
+	// cria o emissor que envia as probabilidades para toda a rede na porta A
 	sender, _ := zmq.NewSocket(zmq.PUSH)
 	defer sender.Close()
 	sender.Bind("tcp://*:" + conf.Dist.PortA)
