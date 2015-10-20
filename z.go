@@ -2,14 +2,14 @@ package main
 
 import (
 	// "github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/cga"
-	"github.com/jgcarvalho/zeca/design"
-	"github.com/jgcarvalho/zeca/eda"
-	"github.com/jgcarvalho/zeca/ga"
-	"github.com/jgcarvalho/zeca/sa"
-	// dist importado do branch
+	"bitbucket.org/jgcarvalho/zeca/cga"
+	"bitbucket.org/jgcarvalho/zeca/design"
+	"bitbucket.org/jgcarvalho/zeca/disteda"
+	"bitbucket.org/jgcarvalho/zeca/eda"
+	"bitbucket.org/jgcarvalho/zeca/ga"
+	"bitbucket.org/jgcarvalho/zeca/sa"
+	// dist impo
 
-	"github.com/jgcarvalho/zeca/disteda"
 	// "github.com/jgcarvalho/zeca/rules"
 	"flag"
 	"fmt"
@@ -85,6 +85,8 @@ func runMasterEDA(fnconfig string) {
 	}
 	if len(md.Undecoded()) > 0 {
 		fmt.Printf("Chaves desconhecidas no arquivo de configuração: %q\n", md.Undecoded())
+		fmt.Printf("Chaves conhecidas: %q\n", md.Keys())
+		fmt.Println("Configuration:", conf)
 		return
 	}
 	fmt.Println("Configuration:", conf)
@@ -155,43 +157,43 @@ func main() {
 	switch *method {
 	case 1:
 		if *fnconfig == "default" {
-			runCGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/cgaconfig.toml")
+			runCGA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/cgaconfig.toml")
 		} else {
 			runCGA(*fnconfig)
 		}
 	case 2:
 		if *fnconfig == "default" {
-			runEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/edaconfig.toml")
+			runEDA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/edaconfig.toml")
 		} else {
 			runEDA(*fnconfig)
 		}
 	case 3:
 		if *fnconfig == "default" {
-			runSA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/saconfig.toml")
+			runSA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/saconfig.toml")
 		} else {
 			runSA(*fnconfig)
 		}
 	case 4:
 		if *fnconfig == "default" {
-			runGA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/gaconfig.toml")
+			runGA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/gaconfig.toml")
 		} else {
 			runGA(*fnconfig)
 		}
 	case 5:
 		if *fnconfig == "default" {
-			runMasterEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
+			runMasterEDA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/distedaconfig.toml")
 		} else {
 			runMasterEDA(*fnconfig)
 		}
 	case 6:
 		if *fnconfig == "default" {
-			runSlaveEDA(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/distedaconfig.toml")
+			runSlaveEDA(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/distedaconfig.toml")
 		} else {
 			runSlaveEDA(*fnconfig)
 		}
 	case 9:
 		if *fnconfig == "default" {
-			runDesign(os.Getenv("GOPATH") + "/src/github.com/jgcarvalho/zeca/designconfig.toml")
+			runDesign(os.Getenv("GOPATH") + "/src/bitbucket.org/jgcarvalho/zeca/designconfig.toml")
 		} else {
 			runDesign(*fnconfig)
 		}

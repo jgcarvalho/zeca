@@ -16,12 +16,12 @@ title = "Default Design config"
 	# input = "./optional"
 	output = "./output-rules"
 
-[proteindb]
-	db-ip = "localhost"
-	db-name = "proteindb_dev"
-	collection-name = "protein"
-	init = "seq_pdb"
-	target = "ss3_cons_all"
+[db]
+	db-dir = "/home/jgcarvalho/sync/data/multissdb/"
+	db-name = "chameleonic.db"
+	bucket-name = "proteins"
+	init = "Seq"
+	target = "All3"
 
 [ca]
 	initial-states = ["#","A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]

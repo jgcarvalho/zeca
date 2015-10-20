@@ -1,9 +1,10 @@
 package cga
 
 import (
-	"github.com/jgcarvalho/zeca/rules"
 	"fmt"
 	"testing"
+
+	"bitbucket.org/jgcarvalho/zeca/rules"
 )
 
 func TestNewProbs(t *testing.T) {

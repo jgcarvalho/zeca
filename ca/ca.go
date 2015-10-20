@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/jgcarvalho/zeca/rules"
+	"bitbucket.org/jgcarvalho/zeca/rules"
 )
 
 var _begin, _expected []byte

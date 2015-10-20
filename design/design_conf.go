@@ -1,8 +1,8 @@
 package design
 
 import (
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/proteindb"
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/db"
 )
 
 type Config struct {
@@ -10,7 +10,7 @@ type Config struct {
 	Algorithm algoConfig
 	Design    designConfig
 	Rules     ruleConfig
-	ProteinDB proteindb.ProtdbConfig
+	DB        db.Config
 	CA        ca.Config
 }
 
@@ -20,8 +20,8 @@ type algoConfig struct {
 
 type designConfig struct {
 	//Generations int
-	Population  int
-	Selection   int
+	Population int
+	Selection  int
 	//Tournament  int
 	//CrossOver   int
 	//Mutation    float64

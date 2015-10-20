@@ -7,9 +7,10 @@ import (
 	"sort"
 	"time"
 
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/proteindb"
-	"github.com/jgcarvalho/zeca/rules"
+	"bitbucket.org/jgcarvalho/zeca/db"
+
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/rules"
 	zmq "github.com/pebbe/zmq4"
 )
 
@@ -31,7 +32,7 @@ func RunSlave(conf Config) {
 
 	// Le os dados das proteinas no DB
 	fmt.Println("Loading proteins...")
-	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	id, start, end, err := db.GetProteins(conf.DB)
 	if err != nil {
 		fmt.Println("Erro no banco de DADOS")
 		panic(err)

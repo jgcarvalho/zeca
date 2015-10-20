@@ -7,10 +7,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/metrics"
-	"github.com/jgcarvalho/zeca/proteindb"
-	"github.com/jgcarvalho/zeca/rules"
+	"bitbucket.org/jgcarvalho/zeca/db"
+
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/metrics"
+	"bitbucket.org/jgcarvalho/zeca/rules"
 )
 
 type Probs struct {
@@ -33,7 +34,7 @@ func Run(conf Config) error {
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Println("Loading proteins...")
-	id, start, end, err := proteindb.GetProteins(conf.ProteinDB)
+	id, start, end, err := db.GetProteins(conf.DB)
 	if err != nil {
 		panic(err)
 	}

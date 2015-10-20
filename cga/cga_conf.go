@@ -1,8 +1,8 @@
 package cga
 
 import (
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/proteindb"
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/db"
 )
 
 type Config struct {
@@ -10,7 +10,7 @@ type Config struct {
 	Algorithm algoConfig
 	CGA       cgaConfig
 	Rules     ruleConfig
-	ProteinDB proteindb.ProtdbConfig
+	DB        db.Config
 	CA        ca.Config
 }
 

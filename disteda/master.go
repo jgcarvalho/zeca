@@ -8,8 +8,8 @@ import (
 	"os"
 	"strconv"
 
+	"bitbucket.org/jgcarvalho/zeca/rules"
 	"github.com/gonum/stat"
-	"github.com/jgcarvalho/zeca/rules"
 	zmq "github.com/pebbe/zmq4"
 )
 

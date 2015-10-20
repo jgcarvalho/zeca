@@ -1,8 +1,8 @@
 package eda
 
 import (
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/proteindb"
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/proteindb"
 )
 
 type Config struct {

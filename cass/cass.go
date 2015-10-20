@@ -3,17 +3,17 @@ package cass
 import (
 	"io/ioutil"
 	"strings"
-	"github.com/jgcarvalho/zeca/proteindb"
+
+	"bitbucket.org/jgcarvalho/zeca/proteindb"
 )
 
 //estrutura para armazenar informacao de um automato celular
 type CellAuto struct {
-	id string
-	seq []byte
-	cell []byte
+	id     string
+	seq    []byte
+	cell   []byte
 	trueSS []byte
 }
-
 
 func CreateOne(fn string) *CellAuto {
 	/* Funcao que cria um automato celular de acordo com o arquivo passado
@@ -63,9 +63,9 @@ func CreateFromProteins(p []proteindb.Protein) []CellAuto {
 }
 
 func loadFile(fn string) (seq []byte, cell []byte, trueSS []byte) {
-	content,err := ioutil.ReadFile("/home/jgcarvalho/sscago/data/" + fn)
+	content, err := ioutil.ReadFile("/home/jgcarvalho/sscago/data/" + fn)
 	if err != nil {
-		println("erro na leitura do arquivo",fn, err)
+		println("erro na leitura do arquivo", fn, err)
 	}
 
 	//considerando haver duas linhas, a primeira a seq e a segunda a ss

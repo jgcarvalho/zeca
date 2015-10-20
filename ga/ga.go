@@ -7,11 +7,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jgcarvalho/zeca/ca"
-	"github.com/jgcarvalho/zeca/metrics"
-	"github.com/jgcarvalho/zeca/plot"
-	"github.com/jgcarvalho/zeca/proteindb"
-	"github.com/jgcarvalho/zeca/rules"
+	"bitbucket.org/jgcarvalho/zeca/ca"
+	"bitbucket.org/jgcarvalho/zeca/metrics"
+	"bitbucket.org/jgcarvalho/zeca/plot"
+	"bitbucket.org/jgcarvalho/zeca/proteindb"
+	"bitbucket.org/jgcarvalho/zeca/rules"
 )
 
 type Population struct {

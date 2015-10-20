@@ -15,11 +15,12 @@ title = "Default SA config"
 	#input = "./optional"
 	output = "./output-best-rule"
 
-[proteindb]
-	db-ip = "10.0.2.116"
-	db-name = "proteindb_dev"
-	collection-name = "protein"
-	target = "ss3_cons_all"
+[db]
+	db-dir = "/home/jgcarvalho/sync/data/multissdb/"
+	db-name = "chameleonic.db"
+	bucket-name = "proteins"
+	init = "Seq"
+	target = "All3"
 
 [ca]
 	initial-states = ["#","A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
