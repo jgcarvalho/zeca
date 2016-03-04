@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 func TestNewProbs(t *testing.T) {

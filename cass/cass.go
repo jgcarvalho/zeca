@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"bitbucket.org/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/proteindb"
 )
 
 //estrutura para armazenar informacao de um automato celular

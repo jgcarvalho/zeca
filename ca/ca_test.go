@@ -3,7 +3,7 @@ package ca
 import (
 	"testing"
 
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type testdata struct {

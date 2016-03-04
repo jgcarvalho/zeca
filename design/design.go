@@ -7,11 +7,11 @@ import (
 	"os"
 	"time"
 
-	"bitbucket.org/jgcarvalho/zeca/db"
+	"github.com/jgcarvalho/zeca/db"
 
-	"bitbucket.org/jgcarvalho/zeca/ca"
-	"bitbucket.org/jgcarvalho/zeca/metrics"
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Probs struct {
@@ -42,7 +42,6 @@ func Run(conf Config) error {
 	fmt.Println("Initializing probabilities...")
 	r, _ := rules.Create(conf.CA.InitStates, conf.CA.TransStates, conf.CA.HasJoker, conf.CA.R)
 	probs := NewProbs(r.Prm)
-	// fmt.Println(probs)
 
 	var pop Population
 
@@ -53,52 +52,16 @@ func Run(conf Config) error {
 	cellauto, _ := ca.Create1D(id, start, end, pop.rule[0], conf.CA.Steps, conf.CA.Consensus)
 	pop.fitness[0] = Fitness(cellauto)
 
-	// cellAuto := make([]*ca.CellAuto1D, conf.EDA.Population)
-
-	// var wg1 sync.WaitGroup
-	// tmp := 0
 	for i := 1; i < conf.Design.Population; i++ {
-		// wg1.Add(1)
-		// go func(pop *Population, i int) {
-		// 	defer wg1.Done()
+
 		pop.rule[i] = probs.GenRule()
 		cellauto.SetRule(pop.rule[i])
 		pop.fitness[i] = Fitness(cellauto)
-		// }(&pop, i) //preciso definir o que por aqui
-		// if i%100 == 0 && i > 0 {
-		// 	fmt.Println("Waiting", i)
-		// 	wg1.Wait()
-		// }
+
 	}
-	// wg1.Wait()
+
 	pop.save("")
 
-	// var selection Selection
-	// selection.rule = make([]*rules.Rule, conf.Design.Selection)
-	// selection.fitness = make([]float64, conf.Design.Selection)
-
-	// var tournament Tournament
-	// tournament.rule = make([]*rules.Rule, conf.Design.Tournament)
-	// tournament.fitness = make([]float64, conf.Design.Tournament)
-
-	// sort.Sort(sort.Reverse(pop))
-	// for j := 0; j < conf.Design.Selection; j++ {
-	// 	winner := len(pop.rule)
-	// 	for k := 0; k < conf.Design.Tournament; k++ {
-	// 		x := rand.Intn(len(pop.rule))
-	// 		if x < winner {
-	// 			winner = x
-	// 		}
-	// 	}
-	//
-	// 	//sort.Sort(sort.Reverse(tournament))
-	//
-	// 	selection.rule[j] = pop.rule[winner]
-	// 	selection.fitness[j] = pop.fitness[winner]
-	// }
-	// fmt.Println("Selection OK")
-	// plot.Histogram(pop.fitness, selection.fitness, 0)
-	//
 	return nil
 }
 

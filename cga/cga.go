@@ -9,10 +9,10 @@ import (
 	"sync"
 	"time"
 
-	"bitbucket.org/jgcarvalho/zeca/ca"
-	"bitbucket.org/jgcarvalho/zeca/db"
-	"bitbucket.org/jgcarvalho/zeca/metrics"
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/db"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Probs struct {

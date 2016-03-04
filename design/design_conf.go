@@ -1,8 +1,8 @@
 package design
 
 import (
-	"bitbucket.org/jgcarvalho/zeca/ca"
-	"bitbucket.org/jgcarvalho/zeca/db"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/db"
 )
 
 type Config struct {

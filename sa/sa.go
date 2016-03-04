@@ -7,10 +7,10 @@ import (
 	"math/rand"
 	"time"
 
-	"bitbucket.org/jgcarvalho/zeca/ca"
-	"bitbucket.org/jgcarvalho/zeca/metrics"
-	"bitbucket.org/jgcarvalho/zeca/proteindb"
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/metrics"
+	"github.com/jgcarvalho/zeca/proteindb"
+	"github.com/jgcarvalho/zeca/rules"
 )
 
 type Solution struct {

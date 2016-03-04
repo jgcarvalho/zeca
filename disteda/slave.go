@@ -7,10 +7,10 @@ import (
 	"sort"
 	"time"
 
-	"bitbucket.org/jgcarvalho/zeca/db"
+	"github.com/jgcarvalho/zeca/db"
 
-	"bitbucket.org/jgcarvalho/zeca/ca"
-	"bitbucket.org/jgcarvalho/zeca/rules"
+	"github.com/jgcarvalho/zeca/ca"
+	"github.com/jgcarvalho/zeca/rules"
 	zmq "github.com/pebbe/zmq4"
 )
 
